@@ -1,6 +1,8 @@
 @extends('admin_layout.layout')
 @section('content')
 
+ 
+
     <div class="Catgory-section">
         <div class="left-Catgory-section">
             <form action="{{ route('update_ad',$ad->id) }}" enctype='multipart/form-data' method="post">
@@ -20,9 +22,14 @@
 
                     <label for="CatgoryName">Advertisement type: </label>
                    <select name="type" id="Advertisementtype">
-                    <option disabled="disabled" selected>None </option>
-                    <option value="image">Image</option>
-                    <option value="video">Video</option>
+                       @if($ad->type =='image')
+                           <option value="image" selected>Image</option>
+                           <option value="video" >Video</option>
+                       @else
+                           <option value="video" selected>Video</option>
+                           <option value="image" >Image</option>
+  @endif
+
                    </select>
                 </div>
                 <div class="adfile">
@@ -39,7 +46,8 @@
                 ?>
                 <img src="{{url('')}}/storage/ad/{{$ad->attachment}}" width="200" height="200">
                 <?php }
-                elseif($extension[1] == 'mp4' || $extension[1] =='mov' || $extension[1] =='wmv' || $extension[1] =='MKV' || $extension[1] =='WebM' || $extension[1] =='AVCHD' || $extension[1] ==' AVI' || $extension[1] == 'FLV')
+//                        ($extension[1] == 'mp4' || $extension[1] =='mov' || $extension[1] =='wmv' || $extension[1] =='MKV' || $extension[1] =='WebM' || $extension[1] =='AVCHD' || $extension[1] ==' AVI' || $extension[1] == 'FLV')
+                else
                 {
                 ?> 
              

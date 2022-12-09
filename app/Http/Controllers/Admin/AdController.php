@@ -113,7 +113,8 @@ class AdController extends Controller
         return view('admin.Ad.edit',compact('ad','sum'));
     }
     public function update(Request $request ,$id)
-    {   
+    {
+
         $data = request()->except(['_token']);
 
         $old_data=advertisements::where('id',$id)->first();
@@ -132,7 +133,7 @@ class AdController extends Controller
             $data['attachment'] = $images;
             $upload = $request->file('attachment')->move(storage_path('app/public/ad/'), $images);
         }
-
+        
           $artist=advertisements::where('id',$id)->update($data);
 
         $ad_id=$id;
