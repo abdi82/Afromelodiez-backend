@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SongsImportController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\LanguageController;
@@ -51,7 +52,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/admin/dashboard', [HomeCo
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/admin/artistDashboard', function () {
     return view('admin.indexArtist');
-})->name('artistDashboard'); 
+})->name('artistDashboard');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/admin/ManagerDashboard', function () {
     return view('admin.index');
@@ -79,7 +80,7 @@ Route::group(['middleware' => ['admin'],'prefix' => 'admin'], function () {
     |--------------------------------------------------------------------------
     | Admin Dashboard
     |--------------------------------------------------------------------------
-    */ 
+    */
     Route::get('admin_contact', [App\Http\Controllers\Admin\AdminPanelController::class,'admin_contact'])->name('admin_contact');
 
    Route::get('contact_listing', [App\Http\Controllers\Admin\AdminPanelController::class,'contact_listing'])->name('contact_listing');
@@ -100,7 +101,7 @@ Route::group(['middleware' => ['admin'],'prefix' => 'admin'], function () {
 
      Route::get('privacy-policy', [App\Http\Controllers\Admin\AdminPanelController::class,'index'])->name('privacy-policy');
      Route::post('add-privacy-policy', [App\Http\Controllers\Admin\AdminPanelController::class,'store'])->name('add-privacy-policy');
-     
+
    Route::get('terms_conditions', [App\Http\Controllers\Admin\AdminPanelController::class,'term_index'])->name('terms_conditions');
 
   Route::post('edit-terms_conditions', [App\Http\Controllers\Admin\AdminPanelController::class,'storeterm'])->name('edit-terms_conditions');
@@ -131,7 +132,7 @@ Route::group(['middleware' => ['admin'],'prefix' => 'admin'], function () {
     Route::post('category/create', [CategoryController::class, 'store'])->name('cat.store');
     Route::any('category/delete/{id}', [CategoryController::class, 'delete'])->name('cat.del');
     Route::get('categories', [CategoryController::class, 'index'])->name('cat.list');
-    
+
     /*
     |--------------------------------------------------------------------------
     |  Banner Section
@@ -182,7 +183,7 @@ Route::group(['middleware' => ['admin'],'prefix' => 'admin'], function () {
      Route::get('/search-artist', [ArtistController::class, 'search_artist'])->name('search_artist');
       Route::get('/search-listing-artist', [ArtistController::class, 'indexSearch_artist'])->name('search_list_artist');
       Route::get('MostlistenedArtist', [ArtistController::class, 'MostlistenedArtist'])->name('MostlistenedArtist');
-      
+
      /*
    |--------------------------------------------------------------------------
    | language Routes
@@ -209,6 +210,8 @@ Route::get('get_song_form', [SongController::class, 'get_song_form'])->name('get
       Route::get('/ajax-autocomplete-search-feature-artists', [SongController::class,'featureSearch']);
       Route::get('song_form', [SongController::class, 'song_form'])->name('song_form');
       Route::get('song', [SongController::class, 'index'])->name('song');
+      Route::post('import-songs', [SongsImportController::class, 'import'])->name('import_songs.import');
+
 
       Route::post('song/create', 'App\Http\Controllers\Admin\SongController@store')->name('song.store');
       Route::get('edit_song/{id}', [SongController::class, 'edit'])->name('edit_song');
@@ -220,7 +223,7 @@ Route::get('get_song_form', [SongController::class, 'get_song_form'])->name('get
       Route::post('multiple_song_store', [SongController::class, 'multiple_song_store'])->name('multiple_song_store');
       Route::get('/search-song', [SongController::class, 'search_song'])->name('search_song');
       Route::get('/search-listing', [SongController::class, 'indexSearch'])->name('search_list');
-      // artist 
+      // artist
       Route::post('store_artist', [SongController::class, 'store_artist'])->name('store_artist');
       Route::post('multiple_song_store_artist/{userid}', [SongController::class, 'multiple_song_store_artist'])->name('multiple_song_store_artist');
       Route::get('artistsong', [SongController::class, 'index_artist'])->name('song_artist_index');
@@ -234,7 +237,7 @@ Route::get('get_song_form', [SongController::class, 'get_song_form'])->name('get
       Route::get('delete_song_artist/{id}', [SongController::class, 'delete_song_artist'])->name('delete_song_artist');
       Route::get('mostlistenedSong', [SongController::class, 'mostlistenedSong'])->name('mostlistenedSong');
       Route::get('CurrentListenersUsers', [SongController::class, 'CurrentListenersUsers'])->name('CurrentListenersUsers');
-      
+
      /*
    |--------------------------------------------------------------------------
    | Video Routes
@@ -328,7 +331,7 @@ Route::get('get_song_form', [SongController::class, 'get_song_form'])->name('get
    Route::get('/ajax-autocomplete-search-podcast', [EpisodesPodcastController::class,'selectSearch']);
    Route::post('episode/create', [EpisodesPodcastController::class, 'store'])->name('episode.store');
     /* artist podcast routes  */
-    
+
     Route::post('podcast/create_artist', [podcastController::class, 'store_artist'])->name('podcast.store_artist');
     Route::get('get_podcast_create_form_artist', [podcastController::class, 'get_podcast_create_form_artist'])->name('get_podcast_create_form_artist');
     Route::get('podcastlist_artist', [podcastController::class, 'index_artist'])->name('podcastlist_artist');
@@ -347,7 +350,7 @@ Route::get('get_song_form', [SongController::class, 'get_song_form'])->name('get
    Route::post('episode/create_artist', [EpisodesPodcastController::class, 'store_artist'])->name('episode.store_artist');
    Route::get('PodcastCurrentListeners', [podcastController::class, 'PodcastCurrentListeners'])->name('PodcastCurrentListeners');
 
-    /* End podacst routes 
+    /* End podacst routes
     |--------------------------------------------------------------------------
     | Notification Routes
     |--------------------------------------------------------------------------
@@ -357,4 +360,3 @@ Route::get('get_song_form', [SongController::class, 'get_song_form'])->name('get
     Route::any('sendnoti', 'App\Http\Controllers\Admin\AdminUserController@notifyUser');
     Route::any('sendPushNotification', 'App\Http\Controllers\Admin\AdminUserController@sendPushNotification');
     Route::any('sendNotification', 'App\Http\Controllers\Admin\AdminUserController@sendNotification');
-   

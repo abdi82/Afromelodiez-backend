@@ -30,7 +30,7 @@ class SongController extends Controller
 {
 
     public function index()
-    {  
+    {
      if (Auth::user()->user_role == 'superAdmin'){
          $song = Song::orderBy('id','DESC')->paginate(10);
      }
@@ -38,9 +38,9 @@ class SongController extends Controller
          $song = Song::orderBy('id','DESC')->where('artist_id',Auth::user()->id)->paginate(10);
      }
 
-     
+
         foreach($song as $value)
-        { 
+        {
             $artist_id_data="";
             $language_id_data="";
             $category_id_data="";
@@ -58,12 +58,12 @@ class SongController extends Controller
             $language=Language::select('*')->where('id', $value['language_id'])->first();
             if(!empty($language))
             {
-               $value['language_id']=$language->name;   
+               $value['language_id']=$language->name;
             }
             else
             {
                 $value['language_id']='';
-            }          
+            }
             $category=Category::select('*')->where('id', $value['category_id'])->first();
             if(!empty($category))
             {
@@ -72,7 +72,7 @@ class SongController extends Controller
             else
             {
                 $value['category_id']='';
-            } 
+            }
             $album=Album::select('*')->where('id', $value['album'])->first();
             if(!empty($album))
             {
@@ -82,22 +82,22 @@ class SongController extends Controller
             {
                 $value['album']='';
             }
-            
+
         }
         return view('admin.song.index',compact('song'));
-    } 
+    }
 
     public function index_artist()
-    {  
+    {
         $userId = Auth::id();
 
         $userartist_id=User::where('id',$userId)->first();
         $song = Song::where('artist_id','=',$userartist_id->artist_id)
                      ->paginate(10);
-        
+
 
         foreach($song as $value)
-        { 
+        {
             $artist_id_data="";
             $language_id_data="";
             $category_id_data="";
@@ -115,12 +115,12 @@ class SongController extends Controller
             $language=Language::select('*')->where('id', $value['language_id'])->first();
             if(!empty($language))
             {
-               $value['language_id']=$language->name;   
+               $value['language_id']=$language->name;
             }
             else
             {
                 $value['language_id']='';
-            }          
+            }
             $category=Category::select('*')->where('id', $value['category_id'])->first();
             if(!empty($category))
             {
@@ -129,7 +129,7 @@ class SongController extends Controller
             else
             {
                 $value['category_id']='';
-            } 
+            }
             $album=Album::select('*')->where('id', $value['album'])->first();
             if(!empty($album))
             {
@@ -138,13 +138,13 @@ class SongController extends Controller
             else
             {
                 $value['album']='';
-            } 
+            }
         }
         return view('admin.artistSong.index',compact('song'));
-    } 
-    
+    }
+
     public function indexSearch(Request $request)
-    {   
+    {
         $validated = $request->validate([
             'search' => 'required'
         ]);
@@ -169,17 +169,17 @@ class SongController extends Controller
                 $song['artist_id']='';
             }
             if($song['language_id'] != '')
-            { 
+            {
             $language=Language::select('*')->where('id', $song['language_id'])->first();
             }
             if(!empty($language))
             {
-               $song['language_id']=$language->name;   
+               $song['language_id']=$language->name;
             }
             else
             {
                 $song['language_id']='';
-            }          
+            }
             $category=Category::select('*')->where('id', $song['category_id'])->first();
             if(!empty($category))
             {
@@ -188,7 +188,7 @@ class SongController extends Controller
             else
             {
                 $song['category_id']='';
-            } 
+            }
             $album=Album::select('*')->where('id', $song['album'])->first();
             if(!empty($album))
             {
@@ -197,12 +197,12 @@ class SongController extends Controller
             else
             {
                 $song['album']='';
-            } 
-        
+            }
+
         return view('admin.song.indexSearch',compact('song'));
-    } 
+    }
     public function indexSearchArtist(Request $request)
-    {   
+    {
         $validated = $request->validate([
             'search' => 'required'
         ]);
@@ -210,7 +210,7 @@ class SongController extends Controller
         $user=ucfirst(auth()->user());
            $artist=json_decode($user);
 
-           $artist_id= $artist->artist_id; 
+           $artist_id= $artist->artist_id;
 
             $search=$request->search;
             $song =Song::select('*')
@@ -235,17 +235,17 @@ class SongController extends Controller
                     $song['artist_id']='';
                 }
                 if($song['language_id'] != '')
-                { 
+                {
                 $language=Language::select('*')->where('id', $song['language_id'])->first();
                 }
                 if(!empty($language))
                 {
-                   $song['language_id']=$language->name;   
+                   $song['language_id']=$language->name;
                 }
                 else
                 {
                     $song['language_id']='';
-                }          
+                }
                 $category=Category::select('*')->where('id', $song['category_id'])->first();
                 if(!empty($category))
                 {
@@ -254,7 +254,7 @@ class SongController extends Controller
                 else
                 {
                     $song['category_id']='';
-                } 
+                }
                 $album=Album::select('*')->where('id', $song['album'])->first();
                 if(!empty($album))
                 {
@@ -263,10 +263,10 @@ class SongController extends Controller
                 else
                 {
                     $song['album']='';
-                } 
+                }
             }
             else
-            {   
+            {
                 $song['id']='';
                 $song['name']='';
                 $song['song']='';
@@ -279,7 +279,7 @@ class SongController extends Controller
     }
 
     public function search_song(Request $request)
-    {   
+    {
         $song =[];
 
         if($request->has('q')){
@@ -287,18 +287,18 @@ class SongController extends Controller
             $song =Song::select('*')
                 ->where('name', 'LIKE', "%$search%")
                 ->get();
-        } 
+        }
 
        return response()->json($song);
     }
     public function search_song_artist(Request $request)
-    {   
+    {
         $song =[];
 
                 $user=ucfirst(auth()->user());
            $artist=json_decode($user);
 
-           $artist_id= $artist->artist_id; 
+           $artist_id= $artist->artist_id;
 
         if($request->has('q')){
             $search = $request->q;
@@ -306,7 +306,7 @@ class SongController extends Controller
                 ->where('name', 'LIKE', "%$search%")
                 ->where('artist_id', '=',$artist_id)
                 ->get();
-        } 
+        }
 
        return response()->json($song);
     }
@@ -317,17 +317,17 @@ class SongController extends Controller
         ]);
         $durations= explode(',',$request->duration);
                 if(isset($request->userID))
-                { 
+                {
                     $artist= Artist::where('user_id',$request->userID)->first();
                     $data['artist_id'] = $artist->id;
                 }
 
       if ($request->hasFile('multiplesong')) {
-              
+
              $files=$request->file('multiplesong');
             $i=0;
             foreach($files as $file){
-                
+
                 $song = time().'_'.$file->getClientOriginalName();
                 $song = str_replace(' ', '', $song);
                 $file->move( storage_path('app/public/song/') , $song);
@@ -337,13 +337,13 @@ class SongController extends Controller
                 $Name =$temp[0] ;
                 $Name = str_replace(' ', '', $Name);
                 $data['name'] = $Name;
-                $data['duration'] = $durations[$i];
+                $data['duration'] = $durations[$i] ?? 0;
 
                 $songs = Song::create($data);
                //$file->move('song',$name);
                 $i++;
             }
-             
+
         }
      return redirect()->route('song')->with('message','Songs Added Successfully');
     }
@@ -357,11 +357,13 @@ class SongController extends Controller
                      ->first();
         $artistID=$user->artist_id;
 
-    if ($request->hasFile('multiplesong')) {
+     if ($request->hasFile('multiplesong')) {
 
              $files=$request->file('multiplesong');
              $i=0;
+
             foreach($files as $file){
+
 
                 $song = time().'_'.$file->getClientOriginalName();
                 $file->move( storage_path('app/public/song/') , $song);
@@ -372,7 +374,7 @@ class SongController extends Controller
                 $data['name'] = $Name;
                 $data['duration'] = $durations[$i];
                 if(Auth::user()->user_role == "superAdmin" || Auth::user()->user_role =="manager"){
-                    $data['artist_id']=$artistID; 
+                    $data['artist_id']=$artistID;
                 }
                 else{
                     $data['artist_id']=Auth::user()->id;
@@ -381,10 +383,10 @@ class SongController extends Controller
                 $songs = Song::create($data);
                 $i++;
             }
-             
+
         }
 
-         
+
      return redirect()->route('song_artist_index')->with('message','Songs Added Successfully');
     }
     public function store(Request $request)
@@ -395,7 +397,7 @@ class SongController extends Controller
             'song' => 'required_without:video',
             'video'=> 'required_without:song'
         ]);
-        
+
         if ($request->hasFile('song')) {
             // $song = $request->song->getClientOriginalName();
             // $song = time().'_'.$song;
@@ -433,7 +435,7 @@ class SongController extends Controller
         else{
             $data['song_image'] ='';
         }
-        
+
         $sel_artists=$request->featuring;
         if($sel_artists != '')
         {
@@ -446,18 +448,18 @@ class SongController extends Controller
 
         if($sel_artists != '')
         {
-        
+
             foreach($sel_artists as $artist)
-            {   
+            {
                 $featuredData['song_id']=$songs->id;
                 $featuredData['artist_id']=$artist;
                 featuredArtists::create($featuredData);
             }
 
         }
-        
 
-        $artist_id=$request->artist_id;  
+
+        $artist_id=$request->artist_id;
         if($artist_id != '')
         {
             $artist=Artist::where('id',$artist_id)->first();
@@ -472,7 +474,7 @@ class SongController extends Controller
                   {
                   $Notify= sendPushNotification('Hi'.$user->name.'!', $artist->name.' added new songs on AfroMelodies.',$user->fcm_token, $notiid=null);
                   }
-                } 
+                }
             }
         }
         return redirect()->route('song')->with('message','Song uploaded Successfully','Data',$request->featuring);
@@ -486,7 +488,7 @@ class SongController extends Controller
             'song' => 'required_without:video',
             'video'=> 'required_without:song'
         ]);
-        
+
         if ($request->hasFile('song')) {
             $song = $request->song->getClientOriginalName();
             $song = time().'_'.$song;
@@ -523,9 +525,9 @@ class SongController extends Controller
         $sel_artists=$request->featuring;
         if($sel_artists != '')
         {
-        
+
             foreach($sel_artists as $artist)
-            {   
+            {
                 $featuredData['song_id']=$songs->id;
                 $featuredData['artist_id']=$artist;
                 featuredArtists::create($featuredData);
@@ -537,14 +539,14 @@ class SongController extends Controller
         if($sel_artists != '')
         {
             foreach($sel_artists as $artist)
-            {   
+            {
                 $featuredData['song_id']=$songs->id;
                 $featuredData['artist_id']=$artist;
                 featuredArtists::create($featuredData);
             }
         }
 
-        $artist_id=$request->artist_id;  
+        $artist_id=$request->artist_id;
         if($artist_id != '')
         {
             $artist=Artist::where('id',$artist_id)->first();
@@ -559,7 +561,7 @@ class SongController extends Controller
                   {
                   $Notify= sendPushNotification('Hi'.$user->name.'!', $artist->name.' added new songs on AfroMelodies.',$user->fcm_token, $notiid=null);
                    }
-                } 
+                }
             }
         }
         return redirect()->route('song_artist_index')->with('message','Song Added Successfully');
@@ -636,10 +638,10 @@ class SongController extends Controller
         return response()->json($song);
     }
     public function featureSearch(Request $request)
-    {  
+    {
         $user_id =auth()->id();
          $user=User::findorfail($user_id);
-        
+
         $artists=array();
         if($request->has('q')){
             $search = $request->q;
@@ -655,7 +657,7 @@ class SongController extends Controller
         return view('admin.song.add');
     }
     public function edit_song_artist($id)
-    {   
+    {
 
         $song_data=Song::find($id);
 
@@ -668,9 +670,9 @@ class SongController extends Controller
 
                         $all_featured=explode(',',$song_data['featuring']);
                         foreach($all_featured as $value)
-                        { 
+                        {
                             if($value != '')
-                             { 
+                             {
                             $feat_artist=Artist::select('*')->where('id', $value)
                                              ->first();
                            $names[]=$feat_artist->name;
@@ -690,8 +692,8 @@ class SongController extends Controller
                         $language=Language::select('*')->where('id', $song_data['language_id'])->get();
                         if($language != "[]")
                         {
-                        $language_id_data=$language[0]->name;   
-                        }              
+                        $language_id_data=$language[0]->name;
+                        }
                         $category=Category::select('*')->where('id', $song_data['category_id'])->get();
                         if($category != "[]")
                         {
@@ -702,12 +704,12 @@ class SongController extends Controller
                         {
                         $album_id_data=$album[0]->name;
                         }
-                           
+
 
         return view('admin.artistSong.edit',compact('song_data','artist_id_data','language_id_data','category_id_data','album_id_data','feature_artist_id_data'));
     }
     public function edit($id)
-    {   
+    {
 
         $song_data=Song::find($id);
 
@@ -720,9 +722,9 @@ class SongController extends Controller
 
                         $all_featured=explode(',',$song_data['featuring']);
                         foreach($all_featured as $value)
-                        { 
+                        {
                             if($value != '')
-                             { 
+                             {
                             $feat_artist=Artist::select('*')->where('id', $value)
                                              ->first();
                            $names[]=$feat_artist->name;
@@ -742,8 +744,8 @@ class SongController extends Controller
                         $language=Language::select('*')->where('id', $song_data['language_id'])->get();
                         if($language != "[]")
                         {
-                        $language_id_data=$language[0]->name;   
-                        }              
+                        $language_id_data=$language[0]->name;
+                        }
                         $category=Category::select('*')->where('id', $song_data['category_id'])->get();
                         if($category != "[]")
                         {
@@ -754,13 +756,13 @@ class SongController extends Controller
                         {
                         $album_id_data=$album[0]->name;
                         }
-                           
+
 
         return view('admin.song.edit',compact('song_data','artist_id_data','language_id_data','category_id_data','album_id_data','feature_artist_id_data'));
     }
 
     public function monthly_listeners(){
-     
+
          $data =songsRecord::select('users.*')->join('users','users.id','=','songs_records.user_id')->whereBetween('songs_records.created_at',[Carbon::now()->subDays(30),Carbon::now()])->groupBy('songs_records.user_id')->paginate(5);
 
         //print_r($data);die('here');
@@ -769,19 +771,19 @@ class SongController extends Controller
     }
 
     public function update(Request $request ,$id)
-    {    
+    {
         $data = request()->except(['_token']);
 
          $validated = $request->validate([
             'name' => 'required',
             'song_image' => 'mimes:jpeg,jpg,png,gif'
-        ]); 
+        ]);
 
         $old_data=Song::where('id',$id)->first();
 
         if ($request->hasFile('song')) {
             if($old_data->song != '')
-            { 
+            {
                 if (file_exists('app/public/song/'.$old_data->song)) {
                    unlink(storage_path('app/public/song/'.$old_data->song));
              }
@@ -792,7 +794,7 @@ class SongController extends Controller
             $data['song'] = $song;
             $upload = $request->file('song')->move(storage_path('app/public/song/'), $song);
         }
-        
+
         if ($request->hasFile('video')) {
             if($old_data->video != '')
             { if (file_exists('app/public/video/'.$old_data->video)) {
@@ -838,7 +840,7 @@ class SongController extends Controller
            }
         }
 
-                $artist_id=$request->artist_id;  
+                $artist_id=$request->artist_id;
         if($artist_id != '')
         {
             $artist=Artist::where('id',$artist_id)->first();
@@ -853,11 +855,11 @@ class SongController extends Controller
                   {
                   $Notify= sendPushNotification('Hi'.$user->name.'!', $artist->name.' added new songs on AfroMelodies.',$user->fcm_token, $notiid=null);
                   }
-                } 
+                }
             }
         }
 
-        
+
         return redirect()->route('song')->with('message','Song Updated Successfully');
     }
 
@@ -867,13 +869,13 @@ class SongController extends Controller
 
          $validated = $request->validate([
             'song_image' => 'mimes:jpeg,jpg,png,gif'
-        ]); 
+        ]);
 
         $old_data=Song::where('id',$id)->first();
 
         if ($request->hasFile('song')) {
             if($old_data->song != '')
-            { 
+            {
                 if (file_exists('app/public/song/'.$old_data->song)) {
                     unlink(storage_path('app/public/song/'.$old_data->song));
                 }
@@ -884,10 +886,10 @@ class SongController extends Controller
             $data['song'] = $song;
             $upload = $request->file('song')->move(storage_path('app/public/song/'), $song);
         }
-        
+
         if ($request->hasFile('video')) {
             if($old_data->video != '')
-            {  
+            {
                 if (file_exists('app/public/video/'.$old_data->video)) {
                  unlink(storage_path('app/public/video/'.$old_data->video));
              }
@@ -931,7 +933,7 @@ class SongController extends Controller
            }
         }
 
-        $artist_id=$request->artist_id;  
+        $artist_id=$request->artist_id;
         if($artist_id != '')
         {
             $artist=Artist::where('id',$artist_id)->first();
@@ -946,19 +948,19 @@ class SongController extends Controller
                   {
                   $Notify= sendPushNotification('Hi'.$user->name.'!', $artist->name.' added new songs on AfroMelodies.',$user->fcm_token, $notiid=null);
                   }
-                } 
+                }
             }
         }
 
         return redirect()->route('song_artist_index')->with('message','Song Updated Successfully');
     }
-	
+
     public function delete($id)
     {
         $data=Song::find($id);
 
         if($data->song != '')
-        {   
+        {
             if (file_exists('app/public/song/'.$data->song)) {
             unlink(storage_path('app/public/song/'.$data->song));
              }
@@ -980,15 +982,15 @@ class SongController extends Controller
         foreach($playlists as $playlist)
         {
            $songs=explode(',',$playlist->song);
-            
+
              foreach($songs as $key => $value)
-             { 
+             {
                if($value == $id)
                {
                    unset($songs[$key]);
                }
             }
-             
+
             $content['song']=implode(',',$songs);
 
             $Updateplaylists=featuredPlaylists::where('id',$playlist['id'])->update($content);
@@ -1001,15 +1003,15 @@ class SongController extends Controller
        foreach($user_playlist as $playlistValue)
        {
           $Usersongs=explode(',',$playlistValue->song_ID);
-           
+
             foreach($Usersongs as $key => $value)
-            { 
+            {
               if($value == $id)
               {
                   unset($Usersongs[$key]);
               }
            }
-            
+
            $contentSong['song_ID']=implode(',',$Usersongs);
 
            $Updateuserplaylists=userPlaylist::where('id',$playlistValue['id'])->update($contentSong);
@@ -1028,7 +1030,7 @@ class SongController extends Controller
         $data=Song::find($id);
 
         if($data->song != '')
-        {   
+        {
             if (file_exists('app/public/song/'.$data->song)) {
             unlink(storage_path('app/public/song/'.$data->song));
              }
@@ -1051,15 +1053,15 @@ class SongController extends Controller
         foreach($playlists as $playlist)
         {
            $songs=explode(',',$playlist->song);
-            
+
              foreach($songs as $key => $value)
-             { 
+             {
                if($value == $id)
                {
                    unset($songs[$key]);
                }
             }
-             
+
             $content['song']=implode(',',$songs);
 
             $Updateplaylists=featuredPlaylists::where('id',$playlist['id'])->update($content);
@@ -1072,15 +1074,15 @@ class SongController extends Controller
        foreach($user_playlist as $playlistValue)
        {
           $Usersongs=explode(',',$playlistValue->song_ID);
-           
+
             foreach($Usersongs as $key => $value)
-            { 
+            {
               if($value == $id)
               {
                   unset($Usersongs[$key]);
               }
            }
-            
+
            $contentSong['song_ID']=implode(',',$Usersongs);
 
            $Updateuserplaylists=userPlaylist::where('id',$playlistValue['id'])->update($contentSong);
@@ -1092,7 +1094,7 @@ class SongController extends Controller
 
         return redirect()->route('song_artist_index')->with('message','Song Deleted Successfully');
     }
-    
+
     public function delete_song_record_data()
     {
         $delete= songsRecord::where( 'created_at', '<=', Carbon::now()->subDays(30))->delete();
@@ -1101,7 +1103,7 @@ class SongController extends Controller
     public function mostlistenedSong()
     {
         $song=Song::where('played' ,'>','100')->paginate(10);
-        
+
 
         return view('admin.song.index',compact('song'));
 
@@ -1125,5 +1127,7 @@ class SongController extends Controller
         $song->save();
         return response()->json(['message'=>'Status Change']);
    }
+
+
 
 }

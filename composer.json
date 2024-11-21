@@ -22,6 +22,7 @@
         "laravel/socialite": "^5.1",
         "laravel/tinker": "^2.5",
         "livewire/livewire": "^2.0",
+        "maatwebsite/excel": "^3.1",
         "nesbot/carbon": "^2.56",
         "stripe/stripe-php": "^7.75",
         "tymon/jwt-auth": "^1.0"
