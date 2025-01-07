@@ -10,4 +10,6 @@ class Song extends Model
     use HasFactory;
     protected $table = 'songs';
     protected $guarded = [];
+    // protected $fillable = ['artist_id', 'name', 'language', 'category', 'hit_songs'];
+
 }
