@@ -24,6 +24,9 @@ use DB;
 use Artisan;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Illuminate\Support\Facades\Storage;
+use Google\Client;
+use Google\Service\Drive;
+use getID3;
 
 
 class SongController extends Controller
@@ -1129,5 +1132,67 @@ class SongController extends Controller
    }
 
 
+    public function resync(Request $request)
+    {
+        $client = new Client();
+        $client->setClientId(env('GOOGLE_DRIVE_CLIENT_ID'));
+        $client->setClientSecret(env('GOOGLE_DRIVE_CLIENT_SECRET'));
+        $client->setAccessType('offline');
+        $client->setScopes(Drive::DRIVE);
+
+        $client->refreshToken(env('GOOGLE_DRIVE_REFRESH_TOKEN'));
+
+        $service = new Drive($client);
+
+        try {
+            if (isset($request->userID)) {
+                $artist = Artist::where('user_id', $request->userID)->first();
+                $data['artist_id'] = $artist->id;
+            }
+
+            $folderId = env('GOOGLE_DRIVE_FOLDER_ID');
+            $files = $service->files->listFiles([
+                'q' => "'{$folderId}' in parents",
+                'fields' => 'nextPageToken, files(id, name, thumbnailLink)',
+            ]);
+
+            foreach ($files->files as $i => $file) {
+                $tempPath = storage_path("app/public/song/{$file->name}");
+                if (Storage::exists("public/song/{$file->name}")) {
+                    continue;
+                }
+
+                $content = $service->files->get($file->id, ['alt' => 'media']);
+                $filename = $file->name;
+                $fileContent = $content->getBody()->getContents();
+
+                Storage::put("public/song/{$filename}", $fileContent);
+
+                $getID3 = new getID3();
+                $fileInfo = $getID3->analyze($tempPath);
+                $durationInSeconds = isset($fileInfo['playtime_seconds']) ? round($fileInfo['playtime_seconds']) : 0;
+                $imagePath = "default-image.png";
+
+                $filenameWords = explode(' ', $filename);
+                $songName = implode(' ', array_slice($filenameWords, 0, 2));
+
+                Song::updateOrCreate(
+                    ['name' => $filename],
+                    [
+                        'name' => $songName,
+                        'song' => $filename,
+                        'language_id' => '19',
+                        'category_id' => '22',
+                        'duration' => $durationInSeconds ?? null,
+                        'song_image' => $imagePath ?? null,
+                    ]
+                );
+            }
+
+            return redirect()->back()->with('success', 'Files have been successfully resynced!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error during file sync: ' . $e->getMessage());
+        }
+    }
 
 }

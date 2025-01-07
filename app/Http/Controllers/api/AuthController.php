@@ -1486,6 +1486,28 @@ public function contact_us(Request $request){
                     'data' => $users_status,
                 ], Response::HTTP_OK);
     }
+
+  public function get_youtube()
+  {
+
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => 'https://www.googleapis.com/youtube/v3/videos?id=20evunLzSgk&key=AIzaSyCjphBRu3_Qq9zyWYXwir5gEn56iiCTNBU&part=statistics',
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'GET',
+    ));
+
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+    echo $response;
+  }
     
 }
 

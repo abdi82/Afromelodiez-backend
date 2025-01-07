@@ -35,7 +35,7 @@
 
     <div class="Catgory-section mt-3">
         <div class="left-Catgory-section">
-            <form action="{{ route('import_songs.import') }}" enctype='multipart/form-data' method="post">
+            <form action="{{ route('resync.google.drive') }}"  method="get" id="resyncForm">
                 @csrf
                 @if ($errors->any())
                     <div class="alert alert-danger">
@@ -47,13 +47,12 @@
                     </div>
                 @endif
                 <div class="col-md-12 ">
-                    <label for="CatgoryName"> Import Songs From File </label>
-                    <input type="file" name="file" accept=".xlsx, .xls" id="Mysong">
+                    <label for="CatgoryName"> Import Songs Google Drive</label>
                     <div id="audio"> </div>
                 </div>
                 <input type="hidden" name="duration" id="duration">
                 <div class="col-md-12 ">
-                    <input type="submit" value="Save" id="btnSubmit">
+                    <input type="submit" value="Resysnc Songs" id="btnSubmit">
                 </div>
             </form>
         </div>
@@ -116,5 +115,11 @@
              console.log('okay1');
          });
 
+         $(document).ready(function () {
+        $('#resyncForm').on('submit', function () {
+            $('#preloader').fadeIn();
+            $('#btnSubmit').prop('disabled', true);
+        });
+    });
 </script>
 @endsection

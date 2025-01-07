@@ -237,6 +237,7 @@ Route::get('get_song_form', [SongController::class, 'get_song_form'])->name('get
       Route::get('delete_song_artist/{id}', [SongController::class, 'delete_song_artist'])->name('delete_song_artist');
       Route::get('mostlistenedSong', [SongController::class, 'mostlistenedSong'])->name('mostlistenedSong');
       Route::get('CurrentListenersUsers', [SongController::class, 'CurrentListenersUsers'])->name('CurrentListenersUsers');
+      Route::get('/resync-google-drive', [SongController::class, 'resync'])->name('resync.google.drive');
 
      /*
    |--------------------------------------------------------------------------

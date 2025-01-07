@@ -16,6 +16,7 @@ use App\Http\Controllers\api\PodcastController;
 use App\Http\Controllers\api\FavouriteController;
 use App\Http\Controllers\api\HomelistingController;
 use App\Http\Controllers\api\EmailController;
+use App\Http\Controllers\api\AdminController;
 use App\Models\User;
 use App\Models\Song;
 /*
@@ -297,5 +298,6 @@ Route::group([
     Route::get('videosList', 'App\Http\Controllers\api\AuthController@videosList');
     Route::get('videosListbyid/{id}', 'App\Http\Controllers\api\AuthController@videosListbyid');
    Route::get('user_status/{id}', 'App\Http\Controllers\api\AuthController@users_status');
-    
+   Route::get('get_youtube', 'App\Http\Controllers\api\AuthController@get_youtube');
+
 });
